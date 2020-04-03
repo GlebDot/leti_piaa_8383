@@ -1,0 +1,5 @@
+https://www.onlinegdb.com/online_c++_compiler
+в меню language в верхнем правом углу выбрать C++ 14
+
+Lr2.cpp - исходный файл с индивидуализацией
+Lrs_s.cpp - исходный файл для степика
