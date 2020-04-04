@@ -1,4 +1,5 @@
-﻿#include <iostream>
+﻿#include "pch.h"
+#include <iostream>
 #include <vector>
 #include <stack>
 #include <string>
@@ -16,7 +17,7 @@ public:
 	char name; //имя точки
 	double heuristic; //эврестическое значение точки
 	double pathLength; //длина пути до точки
-	double cost; //общая стоимость перехода в точку
+	double cost; //эвристическая оценка
 	Colors color; //цвет точки
 	Vertex() : color(Colors::Black) {}
 	Vertex(char a) : name(a), color(Colors::Black) {}
@@ -84,6 +85,7 @@ private:
 
 	HANDLE hConsole; //управление консолью
 
+	//функция для печати карты эвристик
 	void printHeuristics() {
 		std::cout << "HEURISTICS\ndot:\tvalue:" << std::endl;
 		for (heuristicsIt = heuristics.begin(); heuristicsIt != heuristics.end(); heuristicsIt++) {
@@ -99,6 +101,8 @@ private:
 		SetConsoleTextAttribute(hConsole, 7 | 0);
 	}
 
+
+	//функция для печати информции об одной итерации ЖА 
 	void printGreedIteration(Edge &current) {
 		SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN | 0);
 		std::cout << "Current edge: " << current.start.name << "<--->" << current.end.name << std::endl;
@@ -125,6 +129,7 @@ private:
 		SetConsoleTextAttribute(hConsole, 7 | 0);
 	}
 
+	//функция для печати информции об одной итерации А*
 	void printAStarIteration(std::priority_queue<Edge*, std::vector<Edge*>, edgeComp_Q> queue, Edge current) {
 		SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE | 0);
 		std::cout << "Current edge: " << current.start.name << "<--->" << current.end.name << " (" << current.weigth << ") "
@@ -160,6 +165,8 @@ private:
 	}
 
 	void generatePath();
+
+	//автоматическое заполнение карты эвристик
 	void autofillHeuristics() {
 		for (graphIt = graph.begin(); graphIt != graph.end(); graphIt++) {
 			heuristics[graphIt->first.name] = abs(graphIt->first.name - end.name);
@@ -168,6 +175,7 @@ private:
 		printHeuristics();
 	}
 
+	//ручное заполнение карты эвристик
 	void handfillHeuristics() {
 		for (graphIt = graph.begin(); graphIt != graph.end(); graphIt++) {
 			std::cout << "Enter heuristic for " << graphIt->first.name << ": ";
@@ -219,6 +227,7 @@ public:
 	void aStarPath();
 };
 
+//функция восстановления пути
 void Graph::generatePath() {
 	pathName.clear();
 	char currentSymbol;
@@ -236,10 +245,12 @@ void Graph::generatePath() {
 	std::cout << pathName << std::endl;
 }
 
+
 void Graph::greedPath() {
 
 	printGreedMessage();
 
+	//сначала сортируем для каждой вершины исходящие из нее ребра
 	for (auto &node : graph) {
 		std::sort(node.second.begin(), node.second.end(), edgeComp_V);
 	}
@@ -249,11 +260,13 @@ void Graph::greedPath() {
 
 	for (;;) {
 
+		//условие выхода из цикла
 		if (current.end.name == end.name) {
 			generatePath();
 			return;
 		}
 
+		//поиск минимального непросмотренного ребра
 		for (edgeIt = graph[current.end].begin(); edgeIt < graph[current.end].end(); edgeIt++) {
 			if (edgeIt->end.color == Colors::Black) {
 				edgeIt->end.color = Colors::White;
@@ -264,8 +277,9 @@ void Graph::greedPath() {
 			}
 		}
 
+		//если ребро не было найдено, то делаем шаг назад
 		if (edgeIt == graph[current.end].end()) {
-			current.end = current.start;
+			current.end.name = path[current.end.name];
 		}
 
 		printGreedIteration(current);
@@ -279,12 +293,13 @@ void Graph::aStarPath() {
 	std::map<char, Colors> visitedVerts;
 	Edge *current;
 
-
+	//создаем карту с непросмотренными вершинами
 	for (graphIt = graph.begin(); graphIt != graph.end(); graphIt++) {
 		visitedVerts[graphIt->first.name] = Colors::Black;
 	}
 	visitedVerts[start.name] = Colors::White;
 
+	//заполняем очередь с приоритетами ребрами, исходящими из первой вершины
 	for (auto &edge : graph[start]) {
 		edge.end.heuristic = heuristics[edge.end.name];
 		edge.end.pathLength = edge.weigth;
@@ -293,22 +308,25 @@ void Graph::aStarPath() {
 	}
 
 	while (!edgeQueue.empty()) {
+		//снимаем верхнее ребро из очереди
 		current = edgeQueue.top();
 		printAStarIteration(edgeQueue, *current);
 
 		edgeQueue.pop();
+		//если уже побывали в точке, в которую ведет ребро, то ничгео не делаем
 		if (visitedVerts[current->end.name] == Colors::White) {
 			continue;
 		}
+
 		visitedVerts[current->end.name] = Colors::White;
 		path[current->end.name] = current->start.name;
-
-
+		//условие выхода
 		if (current->end.name == end.name) {
 			generatePath();
 			return;
 		}
-
+		//добавляем в очередь все ребра, ведущие в непросмотренные вершины и исходящие из вершины, 
+		//в которую ведет текущее ребро
 		for (auto &edge : graph[current->end.name]) {
 			if (visitedVerts[edge.end.name] == Colors::Black) {
 				edge.end.heuristic = heuristics[edge.end.name];

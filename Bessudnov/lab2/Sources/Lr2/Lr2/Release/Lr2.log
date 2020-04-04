@@ -1,7 +1,8 @@
-﻿  Lr2.cpp
+﻿  pch.cpp
+  Lr2.cpp
   Создание кода
-  3 of 789 functions ( 0.4%) were compiled, the rest were copied from previous compilation.
+  784 of 789 functions (99.4%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    1 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   Создание кода завершено
-  Lr2.vcxproj -> D:\LETI\2nd course\ПИАА\Lr2\Release\Lr2.exe
+  Lr2.vcxproj -> D:\LETI\2nd course\ПИАА\leti_piaa_8383\Bessudnov\lab2\Sources\Lr2\Release\Lr2.exe

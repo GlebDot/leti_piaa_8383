@@ -136,7 +136,7 @@ void Graph::greedPath() {
 		}
 
 		if (edgeIt == graph[current.end].end()) {
-			current.end = current.start;
+			current.end.name = path[current.end.name];
 		}
 	}
 }
