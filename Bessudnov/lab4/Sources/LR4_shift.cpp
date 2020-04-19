@@ -4,23 +4,27 @@
 
 class StringSearcher {
 private:
-	std::string text; //строка-текст
-	std::vector<int> answers; //вектор для записи найденных вхождений
-	std::vector<int> prefixies; //вектор для хранения префиксов
+	std::string text; //СЃС‚СЂРѕРєР°-С‚РµРєСЃС‚
+	std::vector<int> answers; //РІРµРєС‚РѕСЂ РґР»СЏ Р·Р°РїРёСЃРё РЅР°Р№РґРµРЅРЅС‹С… РІС…РѕР¶РґРµРЅРёР№
+	std::vector<int> prefixies; //РІРµРєС‚РѕСЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РїСЂРµС„РёРєСЃРѕРІ
 
 
-	void prefix(const std::string &str); //функция для вычисления префикс-функции
+	void prefix(const std::string &str); //С„СѓРЅРєС†РёСЏ РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёСЏ РїСЂРµС„РёРєСЃ-С„СѓРЅРєС†РёРё
 
-	void printPrefixies(); //функция печати префиксов
+	void printPrefixies(); //С„СѓРЅРєС†РёСЏ РїРµС‡Р°С‚Рё РїСЂРµС„РёРєСЃРѕРІ
 public:
-	StringSearcher(); //конструкторы
-	StringSearcher(std::string text);
+	StringSearcher(std::string text); //РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂС‹
+	StringSearcher();
 
-	void printAnswerKMP(); //функция печати результатов КМП
-	void printAnswerShift(); //функция печати проверки строк на цикличность
+	void setText(std::string text) {
+		this->text = text;
+	}
 
-	void KMP(const std::string &pattern); //функция КМП-алгоритма
-	void shiftCheck(const std::string &checkString); //функция проверки строк на цикличность
+	void printAnswerKMP(); //С„СѓРЅРєС†РёСЏ РїРµС‡Р°С‚Рё СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РљРњРџ
+	void printAnswerShift(); //С„СѓРЅРєС†РёСЏ РїРµС‡Р°С‚Рё РїСЂРѕРІРµСЂРєРё СЃС‚СЂРѕРє РЅР° С†РёРєР»РёС‡РЅРѕСЃС‚СЊ
+
+	void KMP(const std::string &pattern); //С„СѓРЅРєС†РёСЏ РљРњРџ-Р°Р»РіРѕСЂРёС‚РјР°
+	void shiftCheck(const std::string &checkString); //С„СѓРЅРєС†РёСЏ РїСЂРѕРІРµСЂРєРё СЃС‚СЂРѕРє РЅР° С†РёРєР»РёС‡РЅРѕСЃС‚СЊ
 };
 
 StringSearcher::StringSearcher(std::string text) : text(text) {
@@ -28,14 +32,12 @@ StringSearcher::StringSearcher(std::string text) : text(text) {
 }
 
 StringSearcher::StringSearcher() {
-	std::cin >> text;
+	
 }
 
 void StringSearcher::KMP(const std::string &pattern) {
 	answers.clear();
 	prefix(pattern);
-
-
 	std::cout << "KMP algorithm start" << std::endl;
 	for (int k = 0, i = 0; k != text.length();) {
 		if (text.at(k) == pattern.at(i)) {
@@ -126,11 +128,11 @@ int main() {
 	StringSearcher stringSearcher(temp);
 	std::cin >> temp;
 
-//	stringSearcher.KMP(temp);
-//	stringSearcher.printAnswerKMP();
+	stringSearcher.KMP(temp);
+	stringSearcher.printAnswerKMP();
 
-	stringSearcher.shiftCheck(temp);
-	stringSearcher.printAnswerShift();
+//	stringSearcher.shiftCheck(temp);
+//	stringSearcher.printAnswerShift();
 
 	return 0;
 }

@@ -13,8 +13,12 @@ private:
 
 	void printPrefixies(); //функция печати префиксов
 public:
-	StringSearcher(); //конструкторы
-	StringSearcher(std::string text);
+	StringSearcher(std::string text); //конструкторы
+	StringSearcher();
+
+	void setText(std::string text) {
+		this->text = text;
+	}
 
 	void printAnswerKMP(); //функция печати результатов КМП
 	void printAnswerShift(); //функция печати проверки строк на цикличность
@@ -28,7 +32,7 @@ StringSearcher::StringSearcher(std::string text) : text(text) {
 }
 
 StringSearcher::StringSearcher() {
-	std::cin >> text;
+
 }
 
 void StringSearcher::KMP(const std::string &pattern) {
@@ -126,11 +130,11 @@ int main() {
 	StringSearcher stringSearcher(temp);
 	std::cin >> temp;
 
-	stringSearcher.KMP(temp);
-	stringSearcher.printAnswerKMP();
+//	stringSearcher.KMP(temp);
+//	stringSearcher.printAnswerKMP();
 
-//	stringSearcher.shiftCheck(temp);
-//	stringSearcher.printAnswerShift();
+	stringSearcher.shiftCheck(temp);
+	stringSearcher.printAnswerShift();
 
 	return 0;
 }
